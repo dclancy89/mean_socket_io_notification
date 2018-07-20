@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Page Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        #button {
+            border: 2px solid #4286f4;
+            background-color: #4286f4;
+            color: white;
+            padding: 2rem 4rem;
+            font-size: 2rem;
+            border-radius: 5px;
+            display: table;
+            margin: 1rem auto;
+        }
+    </style>
+    <!-- <link rel="stylesheet" type="text/css" href="css/main.css"> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type ="text/javascript">
+        $(document).ready(function (){
+    
+            var socket = io(); //1
+    
+            socket.on('new_connection', function (data) { //4
+                $("#message").append("<p>Socket ID: " + data + " joined us!</p>");
+            });
+
+            socket.on('disconnected_user', function(data) {
+                $("#message").append("<p>Socket ID: " + data + " disconnected.</p>");
+            })
+
+            socket.on('notification', function(data) {
+                $("#message").append("<p>Socket ID: " + data + " triggered a notification.</p>");
+            })
+
+            $("#button").on("click", function(e){
+                e.preventDefault();
+                socket.emit("trigger_notification");
+            })
+        });
+    </script>
+</head>
+<body>
+    <button id="button">Notify Everyone</button>
+    <div id="message"></div>
+</body>
+</html>
